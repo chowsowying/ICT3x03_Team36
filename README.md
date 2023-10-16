@@ -7,7 +7,7 @@
 
 2. **MongoDB**: Install MongoDB, a NoSQL database used for the project. You can download it from the [MongoDB official website](https://www.mongodb.com/try/download/community).
 3. **MongoDB Altas**: Make sure to sign up an account and being invited into the db.
-4. **Postman**: Install, signin and make a connection using the provided url from mongodb altas.
+4. **Postman**: Install,for testing purposes.
 
 
 ### Project Setup
@@ -26,7 +26,7 @@
   <br>DB_URI = {mongodb altas db url}
   <br>JWT_SECRET = 123456
   <br>NODE_ENV = development
-3. **Start Projects for both backend and frontend**
+3. **Start Projects for both backend and frontend, must run both**
    ```bash
    npm start
 
