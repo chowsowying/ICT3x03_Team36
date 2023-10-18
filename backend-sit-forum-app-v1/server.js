@@ -16,11 +16,13 @@ connectDB();
 
 // Use CORS middleware
 app.use(
-  cors({
-    origin: 'http://localhost:3000', // Add the frontend URL you want to allow
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true,
-  })
+  cors(
+  //   {
+  //   origin: 'http://localhost:3000', // Add the frontend URL you want to allow
+  //   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  //   credentials: true,
+  // }
+  )
 );
 
 app.use(cors());

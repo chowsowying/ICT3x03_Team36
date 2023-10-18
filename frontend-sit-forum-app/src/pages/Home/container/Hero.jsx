@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FiSearch } from 'react-icons/fi';
 import { images } from '../../../constants';
 
 const Hero = () => {
+
   return (
     <section className="container mx-auto flex flex-col lg:flex-row px-5 py-5">
       <div className="lg:w-1/2 flex flex-col">

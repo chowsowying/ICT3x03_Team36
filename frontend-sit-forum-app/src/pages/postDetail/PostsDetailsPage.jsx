@@ -96,7 +96,7 @@ const PostsDetailsPage = () => {
                 </article>
                 <div>
                     <SuggestedPost header="Latest Posts"
-                        posts={postsData}
+                        posts={postsData?.data}
                         text={data?.text}
                         className="mt-8 lg:mt-0 lg:max-w-xs" />
                     <div className="mt-7">

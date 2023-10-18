@@ -19,11 +19,10 @@ const Posts = () => {
   });
 
 
-
   return (
     <section className="container mx-auto px-5 py-10">
       <div className="grid gap-x-5 gap-y-5 md:grid-cols-2 lg:grid-cols-3">
-        {!isLoading && !isError && data.map((post) => (
+        {!isLoading && !isError && data?.data.map((post) => (
           <PostCard
             key={post._id}
             post={post}
