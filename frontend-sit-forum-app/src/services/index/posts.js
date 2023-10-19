@@ -55,3 +55,26 @@ export const getSinglePost = async ({ slug }) => {
         }
     }
 };
+
+export const createPost = async ({ token, title, caption, content }) => {
+    try {
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        };
+
+        const { data } = await axios.post('http://localhost:5000/api/posts/createPost', {
+            title,
+            caption,
+            content,
+        }, config);
+        return data;
+    } catch (error) {
+        if (error.response && error.response.data.message) {
+            throw new Error(error.response.data.message);
+        } else {
+            throw new Error(error.message);
+        }
+    }
+};

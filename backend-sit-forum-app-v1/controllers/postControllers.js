@@ -8,21 +8,33 @@ import Comment from "../models/Comment";
 //create post
 const createPost = async (req, res, next) => {
     try {
-        const post = new Post({
-            title: "Sample title",
-            caption: "sample caption",
-            slug: uuidv4(),
-            body: {
-                "type": "doc",
-                "content": [],
+        const { title, caption, content} = req.body;
 
-            },
+        const bodyObject =  {
+            "type": "doc",
+            "content": [
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": content
+                        }
+                    ]
+                }
+            ]
+        };
+        const post = new Post({
+            title: title,
+            caption: caption,
+            slug: uuidv4(),
+            body: bodyObject,
             photo: "",
             user: req.user._id,
         });
 
-        const createPost = await post.save();
-        return res.json(createPost);
+        const createdPost = await post.save();
+        return res.json(createdPost);
     }
     catch (error) {
         // status 500 server internal error
