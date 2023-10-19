@@ -5,6 +5,8 @@ import HomePage from './pages/Home/HomePage';
 import PostsDetailsPage from "./pages/postDetail/PostsDetailsPage";
 import UserRegisterPage from "./pages/register/UserRegisterPage";
 import LoginPage from "./pages/login/LoginPage";
+import PostsPage from './pages/Posts/PostsPage';
+import CreatePost from './pages/Posts/createPost';
 import UserProfilePage from "./pages/profile/UserProfilePage";
 import AdminLayout from "./pages/admin/AdminLayout";
 import Admin from "./pages/admin/screens/Admin";
@@ -24,6 +26,8 @@ function App() {
         <Route path="/userregister" element={<UserRegisterPage />}/>
         <Route path="/login" element={<LoginPage />}/>
         <Route path="/profile" element={<UserProfilePage />}/>
+        <Route path="/createpost" element={<CreatePost />}/>
+        <Route path="/post" element={<PostsPage />}/>
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Admin />} />
           <Route path="comments" element={<Comment />} />
