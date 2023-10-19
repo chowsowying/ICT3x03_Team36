@@ -31,7 +31,7 @@ const ListPosts = () => {
             </div>
 
             <div className="mt-5">
-                <a href="/createPost" className="mx-auto flex items-center gap-x-2 font-bold text-primary border-2 border-primary px-6 py-3 rounded-lg">
+                <a href="/createNewPost" className="mx-auto flex items-center gap-x-2 font-bold text-primary border-2 border-primary px-6 py-3 rounded-lg">
                     <span>Create Post</span>
                     <FaArrowRight className="w-3 h-3" />
                 </a>

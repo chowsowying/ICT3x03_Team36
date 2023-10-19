@@ -3,7 +3,7 @@ import { createPost } from '../../services/index/posts';
 import { useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 
-const CreatePost = () => {
+const CreateNewPost = () => {
     const navigate = useNavigate();
     const userState = useSelector(state => state.user);
     const handleSubmit = async (e) => {
@@ -86,4 +86,4 @@ const CreatePost = () => {
     )
 }
 
-export default CreatePost
+export default CreateNewPost
