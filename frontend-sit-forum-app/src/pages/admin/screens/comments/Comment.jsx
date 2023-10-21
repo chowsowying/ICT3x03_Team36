@@ -86,12 +86,12 @@ const Comment = () => {
                                     {comments.slice((currentPage - 1) * commentsPerPage, currentPage * commentsPerPage).map((comment) => (
                                         <tr key={comment.id}>
                                             <td className="px-5 py-2 text-sm bg-white border-b border-gray-200">
-                                                <p className="text-gray-900 whitespace-no-wrap">
+                                                <p className="text-gray-900 whitespace-no-wrap break-all">
                                                     {comment.post.title}
                                                 </p>
                                             </td>
                                             <td className="px-5 py-2 text-sm bg-white border-b border-gray-200">
-                                                <p className="text-gray-900 whitespace-no-wrap">
+                                                <p className="text-gray-900 whitespace-no-wrap break-all">
                                                     {comment.desc}
                                                 </p>
                                             </td>
