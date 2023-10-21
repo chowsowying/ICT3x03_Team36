@@ -46,6 +46,28 @@ export const updateComment = async ({ token, desc, commentId }) => {
     }
 };
 
+//update comment
+export const updateCommentCheck = async ({ token, check, commentId }) => {
+    try {
+        //create obj and save it in config variable
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        };
+
+        const { data } = await axios.put(`http://localhost:5000/api/comments/${commentId}`, 
+        { check }, config);
+
+        return data;
+    } catch (error) {
+        if (error.response && error.response.data.message) {
+            throw new Error(error.response.data.message);
+        } else {
+            throw new Error(error.message);
+        }
+    }
+};
 
 //delete comment
 export const deleteComment = async ({ token, commentId }) => {
@@ -60,6 +82,25 @@ export const deleteComment = async ({ token, commentId }) => {
 
         const { data } = await axios.delete(`http://localhost:5000/api/comments/${commentId}`, config);
 
+        return data;
+    } catch (error) {
+        if (error.response && error.response.data.message) {
+            throw new Error(error.response.data.message);
+        } else {
+            throw new Error(error.message);
+        }
+    }
+};
+
+export const readAllUncheckComment = async ({token}) => {
+    try {
+        //create obj and save it in config variable
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        };
+        const { data } = await axios.get('http://localhost:5000/api/comments/readAllUncheckComment', config);
         return data;
     } catch (error) {
         if (error.response && error.response.data.message) {

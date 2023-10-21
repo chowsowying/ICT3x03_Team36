@@ -35,14 +35,24 @@ const createComment = async (req, res, next) => {
     }
 };
 
+const readAllUncheckComment = async (req, res, next) => {
+    try {
+        // Find all comments with "check" equal to false
+        const comments = await Comment.find({ check: false }).populate('post');
+
+        return res.json(comments);
+    } catch (error) {
+        next(error);
+    }
+};
+
 //update comment
 const updateComment = async (req, res, next) => {
 
     try
     {
         //slug getting from front end
-        const {desc} = req.body
-
+        const {desc, check} = req.body
         // get the post that we found
         const comment = await Comment.findById(req.params.commentId);
 
@@ -54,6 +64,7 @@ const updateComment = async (req, res, next) => {
 
         //update commnet
         comment.desc = desc || comment.desc;
+        comment.check = check || comment.check;
 
         const updateComment = await comment.save();
         return res.json(updateComment);
@@ -97,4 +108,4 @@ const deleteComment = async (req, res, next) => {
     }
 };
 
-export {createComment, updateComment, deleteComment}
+export {createComment, updateComment, deleteComment, readAllUncheckComment}
