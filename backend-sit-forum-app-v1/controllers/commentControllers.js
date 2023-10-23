@@ -39,8 +39,10 @@ const readAllUncheckComment = async (req, res, next) => {
     try {
         // Find all comments with "check" equal to false
         const comments = await Comment.find({ check: false }).populate('post');
+        // Filter out comments where the 'post' object is not found
+        const filteredComments = comments.filter(comment => comment.post);
 
-        return res.json(comments);
+        return res.json(filteredComments);
     } catch (error) {
         next(error);
     }

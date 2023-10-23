@@ -60,9 +60,9 @@ const Comment = () => {
         <div>
             <h1 className='text-2xl font-semibold'>Comments</h1>
             <div class="px-4 py-4 -mx-4 overflow-x-auto sm:-mx-8 sm:px-8">
-                <div class="py-8">
+                <div class="py-8" style={{ maxHeight: '75vh', overflowY: 'auto' }}>
                     <div class="px-4 py-4 -mx-4 overflow-x-auto sm:-mx-8 sm:px-8">
-                        <div class="inline-block min-w-full overflow-hidden rounded-lg shadow">
+                        <div class="inline-block w-full overflow-hidden rounded-lg shadow" >
                             <table class="min-w-full leading-normal">
                                 <thead>
                                     <tr>
@@ -85,12 +85,12 @@ const Comment = () => {
                                 <tbody>
                                     {comments.slice((currentPage - 1) * commentsPerPage, currentPage * commentsPerPage).map((comment) => (
                                         <tr key={comment.id}>
-                                            <td className="px-5 py-2 text-sm bg-white border-b border-gray-200">
+                                            <td className="px-5 py-2 text-sm bg-white border-b border-gray-200" style={{ maxWidth: '200px' }}>
                                                 <p className="text-gray-900 whitespace-no-wrap break-all">
                                                     {comment.post.title}
                                                 </p>
                                             </td>
-                                            <td className="px-5 py-2 text-sm bg-white border-b border-gray-200">
+                                            <td className="px-5 py-2 text-sm bg-white border-b border-gray-200" style={{ maxWidth: '200px' }}>
                                                 <p className="text-gray-900 whitespace-no-wrap break-all">
                                                     {comment.desc}
                                                 </p>
@@ -128,34 +128,34 @@ const Comment = () => {
                                     ))}
                                 </tbody>
                             </table>
-                            <div class="flex flex-col items-center px-5 py-5 bg-white xs:flex-row xs:justify-between">
-                                <div class="flex items-center">
-                                    <button
-                                        type="button"
-                                        onClick={() => paginate(currentPage - 1)}
-                                        class="w-full p-4 text-base text-gray-600 bg-white border rounded-l-xl hover:bg-gray-100"
-                                        disabled={currentPage === 1}
-                                    >
-                                        {"<"}
-                                    </button>
-                                    <button type="button" class="w-full p-4 text-base text-indigo-500 bg-white border-t border-b hover:bg-gray-100">
-                                        {currentPage}
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => paginate(currentPage + 1)}
-                                        class="w-full p-4 text-base text-gray-600 bg-white border-t border-b border-r rounded-r-xl hover:bg-gray-100"
-                                        disabled={indexOfLastComment >= comments.length}
-                                    >
-                                        {">"}
-                                    </button>
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
             </div>
-        
+            <div class="flex flex-col items-center px-5 py-5 bg-white xs:flex-row xs:justify-between" style={{ height: 'auto' }}>
+                <div class="flex items-center">
+                    <button
+                        type="button"
+                        onClick={() => paginate(currentPage - 1)}
+                        class="w-full p-4 text-base text-gray-600 bg-white border rounded-l-xl hover:bg-gray-100"
+                        disabled={currentPage === 1}
+                    >
+                        {"<"}
+                    </button>
+                    <button type="button" class="w-full p-4 text-base text-indigo-500 bg-white border-t border-b ">
+                        {currentPage}
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => paginate(currentPage + 1)}
+                        class="w-full p-4 text-base text-gray-600 bg-white border-t border-b border-r rounded-r-xl hover:bg-gray-100"
+                        disabled={indexOfLastComment >= comments.length}
+                    >
+                        {">"}
+                    </button>
+                </div>
+            </div>
         </div>
 
     )
