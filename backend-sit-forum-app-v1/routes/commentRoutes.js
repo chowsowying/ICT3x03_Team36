@@ -4,7 +4,6 @@ import { createComment, deleteComment, updateComment, readAllUncheckComment} fro
 import { authGuard } from "../middleware/authMiddleware";
 
 
-
 router.post("/", authGuard, createComment);
 router.route("/:commentId").put(authGuard, updateComment).delete(authGuard, deleteComment);
 router.get("/readAllUncheckComment", authGuard, readAllUncheckComment)
