@@ -1,18 +1,31 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { createPost } from '../../services/index/posts';
 import { useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
+import {useQuery} from "@tanstack/react-query";
+import {getUserProfile} from "../../services/index/users";
+import toast from "react-hot-toast";
 
 const CreateNewPost = () => {
     const navigate = useNavigate();
     const userState = useSelector(state => state.user);
+    useEffect(() => {
+        //retrieve user data to check if it is null
+        if (userState.userInfo == null) {
+            // navigate to login page if not logged in
+            navigate("/login");
+            toast.error("Login or register to create new post");
+        }
+    }, []);
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const title = e.target.title.value;
         const caption = e.target.caption.value;
         const content = e.target.content.value;
         const token = userState.userInfo.token;
-        const response = await createPost({ token, title, caption, content});
+        const response = await createPost({token, title, caption, content});
         navigate(`/post/${response.slug}`);
     };
     return (
@@ -54,24 +67,24 @@ const CreateNewPost = () => {
                             </div>
                             <div className="w-full">
                                 <div className="relative">
-                  <textarea
-                      name="content"
-                      rows="10"
-                      className="rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-                      placeholder="Content"
-                  ></textarea>
+              <textarea
+                  name="content"
+                  rows="10"
+                  className="rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                  placeholder="Content"
+              ></textarea>
                                 </div>
                             </div>
                             <div></div>
                             <div>
-                <span className="block w-full rounded-md shadow-sm">
-                  <button
-                      type="submit"
-                      className="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
-                  >
-                    Submit
-                  </button>
-                </span>
+            <span className="block w-full rounded-md shadow-sm">
+              <button
+                  type="submit"
+                  className="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
+              >
+                Submit
+              </button>
+            </span>
                             </div>
                         </div>
                     </div>
