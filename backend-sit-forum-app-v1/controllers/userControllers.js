@@ -9,6 +9,13 @@ const registerUser = async (req, res, next) => {
         console.log('Request body:', req.body);
         const { name, email, password } = req.body;
 
+        //check if email is valid
+        const email_regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if(!email_regex.test(email)) {
+            throw new Error("Email is not valid");
+        }
+
+
         //check if user exist
         let user = await User.findOne({ email });
         // Log the result of the query
