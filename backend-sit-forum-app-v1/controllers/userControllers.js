@@ -72,7 +72,7 @@ const loginUser = async (req, res, next) => {
 
         //check if the user exits
         if (!user) {
-            throw new Error("Email Not Found");
+            throw new Error("Invalid Email or Password");
         }
 
         //compare function return true / false
