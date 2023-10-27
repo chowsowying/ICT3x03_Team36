@@ -197,6 +197,11 @@ const getAllPost = async (req, res, next) => {
         const skip = (page - 1) * pageSize;
         const total = await Post.find(where).countDocuments();
         const pages = Math.ceil(total / pageSize);
+        // res.header("x-filter", filter);
+        // res.header("x-totalcount", JSON.stringify(total));
+        // res.header("x-currentpage", JSON.stringify(page));
+        // res.header("x-pagesize", JSON.stringify(pageSize));
+        // res.header("x-totalpagecount", JSON.stringify(pages));
 
         res.header({
             "x-filter": filter,
@@ -205,13 +210,6 @@ const getAllPost = async (req, res, next) => {
             "x-pagesize": JSON.stringify(pageSize),
             "x-totalpagecount": JSON.stringify(pages),
         });
-
-        // res.header("x-filter", filter);
-        // res.header("x-totalcount", JSON.stringify(total));
-        // res.header("x-currentpage", JSON.stringify(page));
-        // res.header("x-pagesize", JSON.stringify(pageSize));
-        // res.header("x-totalpagecount", JSON.stringify(pages));
-
 
         if (page > pages) {
             return res.json([]);
@@ -227,6 +225,7 @@ const getAllPost = async (req, res, next) => {
                 },
             ])
             .sort({ updatedAt: "desc" });
+        
 
         return res.json(result);
     } catch (error) {

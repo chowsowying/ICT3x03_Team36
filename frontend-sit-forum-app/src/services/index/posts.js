@@ -5,7 +5,7 @@ export const getAllPost = async (searchKeyword = "", page = 1, limit = 5) => {
         const { data, headers } = await axios.get(
             `http://localhost:5000/api/posts?searchKeyword=${searchKeyword}&page=${page}&limit=${limit}`
         );
-    
+
         console.log('Response Headers:', headers['x-totalpagecount']);
         console.log('Response Headers:', headers['x-totalcount']);
         console.log('Response Headers:', headers['x-page']);
@@ -16,7 +16,7 @@ export const getAllPost = async (searchKeyword = "", page = 1, limit = 5) => {
         throw new Error(error.message);
     }
 };
- 
+
 // export const getAllPost = async (searchKeyword = "", page = 1, limit = 5) => {
 //     try {
 //         const response = await axios.get(`http://localhost:5000/api/posts`, {
@@ -69,6 +69,26 @@ export const createPost = async ({ token, title, caption, content }) => {
             caption,
             content,
         }, config);
+        return data;
+    } catch (error) {
+        if (error.response && error.response.data.message) {
+            throw new Error(error.response.data.message);
+        } else {
+            throw new Error(error.message);
+        }
+    }
+};
+
+//single post
+export const deletePost = async ({ slug, token }) => {
+    try {
+        //create obj and save it in config variable
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        };
+        const { data } = await axios.delete(`http://localhost:5000/api/posts/${slug}`, config);
         return data;
     } catch (error) {
         if (error.response && error.response.data.message) {
