@@ -37,6 +37,26 @@ function EditUser(props) {
     }
   };
   
+    
+  async function handleSave() {
+    try {
+      console.log(props.email);
+      // Check if changes have been made
+      if (adminStatus !== selectedValue) {
+        // Perform the update logic here
+        await updateUser({ token,email:props.email, admin:adminStatus });
+        handleClose(); // Close the modal
+        //reload the main admin page to show changes
+        window.location.reload();
+      } else {
+        // No changes have been made, directly close the modal
+        handleClose();
+      }
+    } catch (error) {
+      console.error('Admin status cannot be saved: ', error);
+    }
+  };
+
   return (
     <>
      <Button variant = "custom" onClick={handleShow} style = {customButton}>
@@ -125,7 +145,7 @@ function EditUser(props) {
                 Cancel
           </button>
           <button className="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded" 
-          type="button" onClick={handleClose}>
+          type="button" onClick={handleSave}>
                 Update
           </button>
         </Modal.Footer>
