@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import MainLayout from '../../components/MainLayout';
 import BreadCrumbs from '../../components/BreadCrumbs';
 import { images, stables } from "../../constants"
-import { Link, useParams } from 'react-router-dom';
+import {Link, useNavigate, useNavigation, useParams} from 'react-router-dom';
 import { generateHTML } from '@tiptap/html';
 import SuggestedPost from './container/SuggestedPost';
 import CommentsContainer from '../../components/comments/CommentsContainer';
 import SocialShareButtons from '../../components/SocialShareButtons';
-import { useQuery } from '@tanstack/react-query';
-import { getAllPost, getSinglePost } from '../../services/index/posts';
+import {useMutation, useQuery} from '@tanstack/react-query';
+import { getAllPost, getSinglePost, deletePost } from '../../services/index/posts';
 //body
 import Document from '@tiptap/extension-document'
 import Paragraph from '@tiptap/extension-paragraph'
@@ -18,6 +18,8 @@ import Bold from '@tiptap/extension-bold'
 //parse html
 import parse from 'html-react-parser';
 import { useSelector } from 'react-redux';
+import {deleteComment} from "../../services/index/comments";
+import toast from "react-hot-toast";
 
 
 const tagsData = [
@@ -36,8 +38,6 @@ const PostsDetailsPage = () => {
     const [breadCrumbsData, setbreadCrumbsData] = useState([]);
     //create state 
     const [body, setBody] = useState(null);
-
-
     const { data, isLoading, isError } = useQuery({
         queryFn: () => getSinglePost({ slug }),
         queryKey: ['post', slug],
@@ -56,9 +56,30 @@ const PostsDetailsPage = () => {
                     Italic,
                 ]))
             );
-
         },
     });
+
+    const navigate = useNavigate();
+
+    const {mutate: mutateDeletePost} = useMutation({
+        mutationFn: ({token, desc, slug}) => {
+            return deletePost({slug, token});
+        },
+        onSuccess: () => {
+            toast.success(
+                "Your post is deleted successfully"
+            );
+            navigate("/post");
+        },
+        onError: (error) => {
+            toast.error(error.message);
+            console.log(error);
+        },
+    });
+
+    const deletePostHandler = () =>{
+        mutateDeletePost({token: userState.userInfo.token, slug: data.slug});
+    };
 
     const { data: postsData } = useQuery({
         queryFn: () => getAllPost(),
@@ -87,6 +108,12 @@ const PostsDetailsPage = () => {
                     <div className="mt-4 prose prose-sm sm:prose-base">
                         {body}
                     </div>
+                    {
+                        userState.userInfo._id === data?.user._id &&
+                        <button  onClick={deletePostHandler} className="px-6 py-2.5 rounded-lg bg-red-600 text-white font-semibold disabled:opacity-70 disabled:cursor-not-allowed">
+                            Delete Post
+                        </button>
+                    }
                     <CommentsContainer
                         comments={data?.comments}
                         className="mt-10"
