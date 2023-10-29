@@ -25,11 +25,9 @@ function EditUser(props) {
         "You have unsaved changes. Are you sure you want to cancel?"
       );
       if (confirmCancel) {
-        // User confirmed to cancel, you can reset the adminStatus or close the modal
+        // User confirmed to cancel
         setadminStatus(selectedValue); // Reset the value to selectedValue
         handleClose(); // Close the modal
-      } else {
-        // User canceled the cancellation
       }
     } else {
       // No changes have been made, directly close the modal
