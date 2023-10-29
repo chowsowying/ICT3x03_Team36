@@ -6,6 +6,7 @@ import App from './App';
 import { Provider } from "react-redux";
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import store from "./store";
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 
 // import reportWebVitals from './reportWebVitals';
