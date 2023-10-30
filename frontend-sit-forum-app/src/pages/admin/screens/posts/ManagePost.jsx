@@ -35,7 +35,8 @@ const ManagePost = () => {
       });
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries(["profile"]);
+      queryClient.invalidateQueries(["posts"]); // Refresh the "posts" query
+      queryClient.invalidateQueries(["profile"]); // Refresh the "profile" query  
       toast.success("Post Is Deleted");
     },
     onError: (error) => {

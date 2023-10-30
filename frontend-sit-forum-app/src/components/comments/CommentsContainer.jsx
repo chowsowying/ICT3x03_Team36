@@ -47,6 +47,9 @@ const CommentsContainer = ({ className, logginedUserId, comments, postSlug }) =>
             toast.success(
               "Your comment is updated successfully"
             );
+
+            queryClient.invalidateQueries(["post", postSlug]);
+            
           },
           onError: (error) => {
             toast.error(error.message);
@@ -63,6 +66,8 @@ const CommentsContainer = ({ className, logginedUserId, comments, postSlug }) =>
             toast.success(
               "Your comment is deleted successfully"
             );
+
+            queryClient.invalidateQueries(["post", postSlug]);
           },
           onError: (error) => {
             toast.error(error.message);
