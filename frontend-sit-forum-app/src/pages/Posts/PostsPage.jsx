@@ -5,7 +5,7 @@ import ListPosts from "./container/ListPosts";
 const PostsPage = () => {
     return (
         <MainLayout>
-            <ListPosts />
+            <ListPosts numOfPost={100} />
         </MainLayout>
     );
 };
