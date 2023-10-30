@@ -77,11 +77,6 @@ const NewPost = () => {
             </div>
           </div>
         </div>
-        <div className="px-4 py-6 border-t-2 border-gray-200 bg-gray-50 sm:px-10">
-          <p className="text-xs leading-5 text-gray-500">
-            This data is displayed for information and can change.
-          </p>
-        </div>
       </div>
     </form>
   )
