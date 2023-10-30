@@ -10,7 +10,6 @@ const Admin = () => {
     const [usersPerPage] = useState(10); // Number of comments to display per page
     const userState = useSelector(state => state.user);
     const token = userState.userInfo.token;
-    //const adminOptions =  ['True', 'False' ];
     const [isEditMode, setIsEditMode] = useState(false);
     const [selectedValue, setSelectedValue] = useState(users.admin); // Initialize with the actual value from your data
 
@@ -30,9 +29,6 @@ const Admin = () => {
   const handleEditClick = () => {
     setIsEditMode(true);
   };
-
-
-
 
     
     // Calculate the index of the last user on the current page
