@@ -101,3 +101,45 @@ export const updateProfilePicture = async ({ token, formData }) => {
         }
     }
 };
+
+//update user admin status
+export const updateUser = async ({ token, email, admin }) => {
+    try {
+        //create obj and save it in config variable
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        };
+
+        const { data } = await axios.put('http://localhost:5000/api/users/updateUser', {email,admin}, config);
+        return data;
+    } catch (error) {
+        if (error.response && error.response.data.message) {
+            throw new Error(error.response.data.message);
+        } else {
+            throw new Error(error.message);
+        }
+    }
+};
+
+//getAllUser
+export const getAllUser = async ({token}) => {
+    try {
+        //create obj and save it in config variable
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        };
+
+        const { data } = await axios.get('http://localhost:5000/api/users/adminDashboard', config);
+        return data;
+    } catch (error) {
+        if (error.response && error.response.data.message) {
+            throw new Error(error.response.data.message);
+        } else {
+            throw new Error(error.message);
+        }
+    }
+};

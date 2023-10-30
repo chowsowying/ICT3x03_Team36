@@ -72,7 +72,7 @@ const loginUser = async (req, res, next) => {
 
         //check if the user exits
         if (!user) {
-            throw new Error("Email Not Found");
+            throw new Error("Invalid Email or Password");
         }
 
         //compare function return true / false
@@ -221,4 +221,56 @@ const updateProfilePicture = async (req, res, next) => {
     }
 }
 
-export { registerUser, loginUser, userProfile, updateProfile, updateProfilePicture };
+const updateUser = async (req, res, next) => {
+    try {
+        //take 2 fields from user input
+        const {email, admin} = req.body;
+        console.log(email);
+        //get user email
+
+        let user = await User.findOne({email:email});
+        console.log(user);
+        if (!user) {
+            throw new Error("User not found");
+        }
+        //assign admin status
+        user.admin = admin || user.admin;
+
+        // if all pass the condition , save the user
+        const updatedUserProfile = await user.save();
+
+        res.json({
+            _id: updatedUserProfile._id,
+            avater: updatedUserProfile.avater,
+            name: updatedUserProfile.name,
+            email: updatedUserProfile.email,
+            verified: updatedUserProfile.verified,
+            admin: updatedUserProfile.admin,
+            token: await updatedUserProfile.generateJWT(),
+        })
+
+    }
+    catch (error) {
+        next(error);
+    }
+}
+
+//get All User
+const getAllUser = async (req, res, next) => {
+    try {
+        // Find all users
+        const users = await User.find({});
+        console.log(users);
+        // Check if any users were found
+        if (!users || users.length === 0) {
+            const error = new Error("No users found");
+            return next(error);
+        }
+        // Return user details as JSON
+        return res.json(users);
+    } catch (error) {
+        next(error);
+    }
+};
+
+export { registerUser, loginUser, userProfile, updateProfile, updateProfilePicture, getAllUser, updateUser };
