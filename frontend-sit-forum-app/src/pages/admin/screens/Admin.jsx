@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { getAllUser } from '../../../services/index/users';
 import EditUser from './EditUser';
 
+
 const Admin = () => {
     const [users, setUsers] = useState([]);
     const [adminStatus, setadminStatus] = useState({});
