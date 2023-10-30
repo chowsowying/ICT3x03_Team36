@@ -6,7 +6,7 @@ const Comment = () => {
     const [comments, setComments] = useState([]);
     const [commentStatus, setCommentStatus] = useState({});
     const [currentPage, setCurrentPage] = useState(1);
-    const [commentsPerPage] = useState(10); // Number of comments to display per page
+    const [commentsPerPage] = useState(10);
     const userState = useSelector(state => state.user);
     const token = userState.userInfo.token;
 

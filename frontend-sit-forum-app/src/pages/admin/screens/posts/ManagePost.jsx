@@ -11,6 +11,10 @@ let isFirstTime = true;
 
 const ManagePost = () => {
 
+  const [posts, setPosts] = useState([]);
+  const [postsPerPage] = useState(10);
+
+  
   const queryClient = useQueryClient();
   const userState = useSelector((state) => state.user);
   const [searchKeyword, setSearchKeyword] = useState("");
@@ -22,7 +26,7 @@ const ManagePost = () => {
     isFetching,
     refetch,
   } = useQuery({
-    queryFn: () => getAllPost(searchKeyword, currentPage),
+    queryFn: () => getAllPost(searchKeyword, 0, 9999999999),
     queryKey: ["posts"],
   });
 
@@ -71,7 +75,21 @@ const ManagePost = () => {
     mutateDelete({slug, token});
 
   }
+  // Calculate the index of the last comment on the current page
+  const indexOfLastPost = currentPage * postsPerPage;
+  // Calculate the index of the first comment on the current page
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  console.log(indexOfLastPost);
+  console.log(currentPage);
+  console.log(postsPerPage);
+  console.log(postsData?.data?.length);
 
+  // Change page
+  const paginate = (pageNumber) => {
+    if (pageNumber >= 1 && pageNumber <= Math.ceil(postsData?.data?.length / postsPerPage)) {
+        setCurrentPage(pageNumber);
+    }
+  };
 
   return (
     <div>
@@ -129,7 +147,7 @@ const ManagePost = () => {
                     </tr>
                   ) : (
 
-                    postsData?.data?.map((post) => (
+                    postsData?.data?.slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage).map((post) => (
                       <tr>
                         <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
                           <div className="flex items-center">
@@ -201,6 +219,29 @@ const ManagePost = () => {
               )} */}
             </div>
           </div>
+          <div class="flex flex-col items-center px-5 py-5 bg-white xs:flex-row xs:justify-between" style={{ height: 'auto' }}>
+                <div class="flex items-center">
+                    <button
+                        type="button"
+                        onClick={() => paginate(currentPage - 1)}
+                        class="w-full p-4 text-base text-gray-600 bg-white border rounded-l-xl hover:bg-gray-100"
+                        disabled={currentPage === 1}
+                    >
+                        {"<"}
+                    </button>
+                    <button type="button" class="w-full p-4 text-base text-indigo-500 bg-white border-t border-b ">
+                        {currentPage}
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => paginate(currentPage + 1)}
+                        class="w-full p-4 text-base text-gray-600 bg-white border-t border-b border-r rounded-r-xl hover:bg-gray-100"
+                        disabled={indexOfLastPost >= postsData?.data?.length}
+                    >
+                        {">"}
+                    </button>
+                </div>
+            </div>
         </div>
       </div>
 

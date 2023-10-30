@@ -11,9 +11,11 @@ const NewPost = () => {
     e.preventDefault();
     const title = e.target.title.value;
     const caption = e.target.caption.value;
+    let tags = e.target.tag.value;
+    tags = tags.split(";");
     const content = e.target.content.value;
     const token = userState.userInfo.token;
-    const response = await createPost({ token, title, caption, content});
+    const response = await createPost({ token, title, caption, tags, content});
     navigate(`/post/${response.slug}`);
   };
   return (
@@ -50,6 +52,16 @@ const NewPost = () => {
                     name="caption"
                     className="rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                     placeholder="Caption"
+                  />
+                </div>
+              </div>
+              <div className="w-full">
+                <div className="relative">
+                  <input
+                    type="text"
+                    name="tag"
+                    className="rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                    placeholder="tag1;tag2;tag3;tag4..."
                   />
                 </div>
               </div>

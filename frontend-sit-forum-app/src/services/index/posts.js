@@ -56,7 +56,7 @@ export const getSinglePost = async ({ slug }) => {
     }
 };
 
-export const createPost = async ({ token, title, caption, content }) => {
+export const createPost = async ({ token, title, caption, tags, content }) => {
     try {
         const config = {
             headers: {
@@ -67,6 +67,7 @@ export const createPost = async ({ token, title, caption, content }) => {
         const { data } = await axios.post('http://localhost:5000/api/posts/createPost', {
             title,
             caption,
+            tags,
             content,
         }, config);
         return data;

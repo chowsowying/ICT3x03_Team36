@@ -8,7 +8,7 @@ import Comment from "../models/Comment";
 //create post
 const createPost = async (req, res, next) => {
     try {
-        const { title, caption, content} = req.body;
+        const { title, caption, tags, content} = req.body;
 
         const bodyObject =  {
             "type": "doc",
@@ -31,6 +31,7 @@ const createPost = async (req, res, next) => {
             body: bodyObject,
             photo: "",
             user: req.user._id,
+            text: tags,
         });
 
         const createdPost = await post.save();
