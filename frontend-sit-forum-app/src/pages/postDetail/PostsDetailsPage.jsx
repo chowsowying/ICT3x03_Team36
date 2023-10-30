@@ -102,10 +102,10 @@ const PostsDetailsPage = () => {
                         ))}
                     </div>
 
-                    <h1 className="text-xl font-medium font-roboto mt-4 text-dark-hard md:text-[26px]">
+                    <h1 className="text-xl font-medium font-roboto mt-4 text-dark-hard md:text-[26px] break-all">
                         {data?.title}
                     </h1>
-                    <div className="mt-4 prose prose-sm sm:prose-base">
+                    <div className="mt-4 prose prose-sm sm:prose-base break-all">
                         {body}
                     </div>
                     {

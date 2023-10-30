@@ -149,7 +149,7 @@ const ManagePost = () => {
 
                     postsData?.data?.slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage).map((post) => (
                       <tr>
-                        <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                        <td className="px-5 py-5 text-sm bg-white border-b border-gray-200 break-all">
                           <div className="flex items-center">
                             <div className="flex-shrink-0">
                               <a href="/" className="relative block">
