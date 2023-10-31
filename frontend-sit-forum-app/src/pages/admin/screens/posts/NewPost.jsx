@@ -12,8 +12,13 @@ const NewPost = () => {
     e.preventDefault();
     const title = e.target.title.value;
     const caption = e.target.caption.value;
-    let tags = e.target.tag.value;
-    tags = tags.split(";");
+    let tags = e.target.tag.value.trim();
+    if (tags == "" || tags == " ") {
+      tags = null;
+    }
+    else {
+        tags = tags.split(";").filter(tag => tag.trim() !== '' && tag.trim() !== ' ');
+    }
     const content = e.target.content.value;
     const token = userState.userInfo.token;
 
