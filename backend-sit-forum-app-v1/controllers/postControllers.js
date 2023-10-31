@@ -203,8 +203,10 @@ const getAllPost = async (req, res, next) => {
         // res.header("x-currentpage", JSON.stringify(page));
         // res.header("x-pagesize", JSON.stringify(pageSize));
         // res.header("x-totalpagecount", JSON.stringify(pages));
-
+        res.setHeader("Access-Control-Allow-Origin", "https://forum.bold-chatelet.cloud/");
         res.header({
+            "Access-Control-Allow-Headers":
+            "Origin, X-Requested-With, Content-Type, Accept",
             "x-filter": filter,
             "x-totalcount": JSON.stringify(total),
             "x-currentpage": JSON.stringify(page),
