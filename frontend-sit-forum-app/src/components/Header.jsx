@@ -11,10 +11,10 @@ import { Link } from 'react-router-dom';
 
 const navItemsInfo = [
     { name: "Home", type: "link", href: "/" },
-    { name: "Posts", type: "link", href: "/post" },
+    { name: "Posts", type: "link", href: "/posts" },
     {
         name: "Pages", type: "dropdown", items: [
-            { title: "About us", href: "about" },
+            { title: "About us", href: "/about" },
             { title: "Contact Us", href: "/contacts" }
         ]
     },

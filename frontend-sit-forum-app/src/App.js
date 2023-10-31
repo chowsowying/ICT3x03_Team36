@@ -13,6 +13,8 @@ import Admin from "./pages/admin/screens/Admin";
 import Comment from "./pages/admin/screens/comments/Comment";
 import NewPost from "./pages/admin/screens/posts/NewPost";
 import ManagePost from "./pages/admin/screens/posts/ManagePost";
+import AboutPage from "./pages/Home/aboutPage";
+import ContactPage from "./pages/Home/contactPage";
 
 
 
@@ -27,7 +29,11 @@ function App() {
         <Route path="/login" element={<LoginPage />}/>
         <Route path="/profile" element={<UserProfilePage />}/>
         <Route path="/createNewPost" element={<CreateNewPost />}/>
-        <Route path="/post" element={<PostsPage />}/>
+        <Route path="/posts" element={<PostsPage />}/>
+        <Route path="/posts/:searchTerm" element={<PostsPage />}/>
+        <Route path="/about" element={<AboutPage />}/>
+        <Route path="/contacts" element={<ContactPage />}/>
+        <Route path="/faq" element={<PostsPage />}/>
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Admin />} />
           <Route path="comments" element={<Comment />} />

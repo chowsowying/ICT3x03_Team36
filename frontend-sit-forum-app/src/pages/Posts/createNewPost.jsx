@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import { createPost } from '../../services/index/posts';
 import { useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
@@ -8,6 +8,7 @@ import MainLayout from "../../components/MainLayout";
 import toast from "react-hot-toast";
 
 const CreateNewPost = () => {
+    const [formErrors, setFormErrors] = useState({});
     const navigate = useNavigate();
     const userState = useSelector(state => state.user);
     useEffect(() => {
@@ -19,7 +20,6 @@ const CreateNewPost = () => {
         }
     }, []);
 
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         const title = e.target.title.value;
@@ -28,9 +28,28 @@ const CreateNewPost = () => {
         tags = tags.split(";")
         const content = e.target.content.value;
         const token = userState.userInfo.token;
-        const response = await createPost({token, title, caption, tags, content});
+
+        const errors = {};
+        if (!title) {
+        errors.title = "Title is required";
+        }
+        if (!caption) {
+        errors.caption = "Caption is required";
+        }
+        if (!content) {
+        errors.content = "Content is required";
+        }
+        setFormErrors(errors);
+
+        // If there are errors, don't proceed with the submission
+        if (Object.keys(errors).length === 0) {
+        // Submit the form as usual
+        const response = await createPost({ token, title, caption, tags, content });
         navigate(`/post/${response.slug}`);
+        }
     };
+
+
     return (
         <MainLayout>
             <form onSubmit={handleSubmit}>
@@ -57,6 +76,7 @@ const CreateNewPost = () => {
                                     className="rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                                     placeholder="Title"
                                     />
+                                    {formErrors.title && <p className="text-red-500">{formErrors.title}</p>}
                                 </div>
                             </div>
                             <div className="w-full">
@@ -67,6 +87,7 @@ const CreateNewPost = () => {
                                     className="rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                                     placeholder="Caption"
                                     />
+                                    {formErrors.caption && <p className="text-red-500">{formErrors.caption}</p>}
                                 </div>
                             </div>
                             
@@ -87,7 +108,7 @@ const CreateNewPost = () => {
                                     rows="10"
                                     className="rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                                     placeholder="Content"
-                                    ></textarea>
+                                    ></textarea>{formErrors.content && <p className="text-red-500">{formErrors.content}</p>}
                                 </div>
                             </div>
                             <div>
