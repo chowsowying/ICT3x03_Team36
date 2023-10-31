@@ -68,7 +68,7 @@ const PostsDetailsPage = () => {
             toast.success(
                 "Your post is deleted successfully"
             );
-            navigate("/post");
+            navigate("/posts");
         },
         onError: (error) => {
             toast.error(error.message);

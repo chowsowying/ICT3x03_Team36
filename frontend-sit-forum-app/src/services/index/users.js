@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const signup = async ({ name, email, password }) => {
     try {
-        const { data } = await axios.post('http://localhost:5000/api/users/register', {
+        const { data } = await axios.post(`${process.env.REACT_APP_API}/api/users/register`, {
 
             name,
             email,
@@ -21,7 +21,7 @@ export const signup = async ({ name, email, password }) => {
 //login function
 export const login = async ({ email, password }) => {
     try {
-        const { data } = await axios.post('http://localhost:5000/api/users/login', {
+        const { data } = await axios.post(`${process.env.REACT_APP_API}/api/users/login`, {
             email,
             password,
         });
@@ -46,7 +46,7 @@ export const getUserProfile = async ({ token }) => {
             },
         };
 
-        const { data } = await axios.get('http://localhost:5000/api/users/profile', config);
+        const { data } = await axios.get(`${process.env.REACT_APP_API}/api/users/profile`, config);
         return data;
     } catch (error) {
         if (error.response && error.response.data.message) {
@@ -68,7 +68,7 @@ export const updateProfile = async ({ token, userData }) => {
             },
         };
 
-        const { data } = await axios.put('http://localhost:5000/api/users/updateProfile', userData, config);
+        const { data } = await axios.put(`${process.env.REACT_APP_API}/api/users/updateProfile`, userData, config);
         return data;
     } catch (error) {
         if (error.response && error.response.data.message) {
@@ -91,7 +91,7 @@ export const updateProfilePicture = async ({ token, formData }) => {
             },
         };
 
-        const { data } = await axios.put('http://localhost:5000/api/users/updateProfilePicture', formData, config);
+        const { data } = await axios.put(`${process.env.REACT_APP_API}/api/users/updateProfilePicture`, formData, config);
         return data;
     } catch (error) {
         if (error.response && error.response.data.message) {
@@ -112,7 +112,7 @@ export const updateUser = async ({ token, email, admin }) => {
             },
         };
 
-        const { data } = await axios.put('http://localhost:5000/api/users/updateUser', {email,admin}, config);
+        const { data } = await axios.put(`${process.env.REACT_APP_API}/api/users/updateUser`, {email,admin}, config);
         return data;
     } catch (error) {
         if (error.response && error.response.data.message) {
@@ -133,7 +133,7 @@ export const getAllUser = async ({token}) => {
             },
         };
 
-        const { data } = await axios.get('http://localhost:5000/api/users/adminDashboard', config);
+        const { data } = await axios.get(`${process.env.REACT_APP_API}/api/users/adminDashboard`, config);
         return data;
     } catch (error) {
         if (error.response && error.response.data.message) {

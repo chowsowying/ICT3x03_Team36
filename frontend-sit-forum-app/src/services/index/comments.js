@@ -10,7 +10,7 @@ export const createNewComment = async ({ token, desc, slug, parent, replyOnUser 
             },
         };
 
-        const { data } = await axios.post('http://localhost:5000/api/comments',
+        const { data } = await axios.post(`${process.env.REACT_APP_API}/api/comments`,
             { desc, slug, parent, replyOnUser, }, config);
         return data;
     } catch (error) {
@@ -33,7 +33,7 @@ export const updateComment = async ({ token, desc, commentId }) => {
             },
         };
 
-        const { data } = await axios.put(`http://localhost:5000/api/comments/${commentId}`, 
+        const { data } = await axios.put(`${process.env.REACT_APP_API}/api/comments/${commentId}`, 
         { desc }, config);
 
         return data;
@@ -56,7 +56,7 @@ export const updateCommentCheck = async ({ token, check, commentId }) => {
             },
         };
 
-        const { data } = await axios.put(`http://localhost:5000/api/comments/${commentId}`, 
+        const { data } = await axios.put(`${process.env.REACT_APP_API}/api/comments/${commentId}`, 
         { check }, config);
 
         return data;
@@ -80,7 +80,7 @@ export const deleteComment = async ({ token, commentId }) => {
             },
         };
 
-        const { data } = await axios.delete(`http://localhost:5000/api/comments/${commentId}`, config);
+        const { data } = await axios.delete(`${process.env.REACT_APP_API}/api/comments/${commentId}`, config);
 
         return data;
     } catch (error) {
@@ -100,7 +100,7 @@ export const readAllUncheckComment = async ({token}) => {
                 Authorization: `Bearer ${token}`,
             },
         };
-        const { data } = await axios.get('http://localhost:5000/api/comments/readAllUncheckComment', config);
+        const { data } = await axios.get(`${process.env.REACT_APP_API}/api/comments/readAllUncheckComment`, config);
         return data;
     } catch (error) {
         if (error.response && error.response.data.message) {
