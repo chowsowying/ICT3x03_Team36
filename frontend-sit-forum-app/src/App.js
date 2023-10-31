@@ -15,6 +15,7 @@ import NewPost from "./pages/admin/screens/posts/NewPost";
 import ManagePost from "./pages/admin/screens/posts/ManagePost";
 import AboutPage from "./pages/Home/aboutPage";
 import ContactPage from "./pages/Home/contactPage";
+import FaqPage from "./pages/Home/faqPage";
 
 
 
@@ -33,7 +34,7 @@ function App() {
         <Route path="/posts/:searchTerm" element={<PostsPage />}/>
         <Route path="/about" element={<AboutPage />}/>
         <Route path="/contacts" element={<ContactPage />}/>
-        <Route path="/faq" element={<PostsPage />}/>
+        <Route path="/faq" element={<FaqPage />}/>
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Admin />} />
           <Route path="comments" element={<Comment />} />
