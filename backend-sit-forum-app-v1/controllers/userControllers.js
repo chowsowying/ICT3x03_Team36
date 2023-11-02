@@ -68,6 +68,14 @@ const loginUser = async (req, res, next) => {
         //user pass in email and password
         const { email, password } = req.body;
 
+        const email_regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if(!email_regex.test(email)) {
+            throw new Error("Email is not valid");
+        }
+
+        console.log('Email type:', typeof email);
+        console.log('Password type:', typeof password);
+
         //check if user exist
         let user = await User.findOne({ email });
         // Log the result of the query
@@ -140,6 +148,11 @@ const updateProfile = async (req, res, next) => {
 
         user.name = req.body.name || user.name;
         user.email = req.body.email || user.email;
+
+        const email_regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if(!email_regex.test(user.email)) {
+            throw new Error("Email is not valid");
+        }
         if (req.body.password && req.body.password.length < 8) {
             throw new Error("Password length must be at least 8")
         }
