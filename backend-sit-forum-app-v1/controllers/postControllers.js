@@ -1,4 +1,4 @@
-import { uploadPicture } from "../middleware/uploadPictureMiddleware";
+import { uploadPicture } from "../middleware/uploadPictureMiddleware.js";
 import User from "../models/User"
 import { fileRemover } from "../utils/fileRemover";
 import Post from "../models/Post";
@@ -76,7 +76,7 @@ const updatePost = async (req, res, next) => {
 
         upload(req, res, async function (err) {
             if (err) {
-                const error = new Error("Unkown error occur when upload image" + err.message);
+                const error = new Error("Unknown error occur when upload image" + err.message);
                 next(error);
             } else {
                 // if everything when smoothly
