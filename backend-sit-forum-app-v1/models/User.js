@@ -1,9 +1,6 @@
-import pkg from 'mongoose';
-const { Schema, model } = pkg;
-import pkg2 from 'bcryptjs';
-const {hash, compare} = pkg2;
-import pkg3 from 'jsonwebtoken';
-const {sign} = pkg3;
+import { Schema, model } from 'mongoose';
+import {hash, compare} from 'bcryptjs';
+import {sign} from 'jsonwebtoken';
 
 const UserSchema = new Schema({
     avater: { type: String, default: "" },
