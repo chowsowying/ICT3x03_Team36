@@ -2,12 +2,16 @@ import { uploadPicture } from "../middleware/uploadPictureMiddleware";
 import User from "../models/User"
 import { fileRemover } from "../utils/fileRemover";
 
+const sanitize = require('mongo-sanitize');
+
 //user register function
 const registerUser = async (req, res, next) => {
     try {
 
         console.log('Request body:', req.body);
-        const { name, email, password } = req.body;
+        const name = sanitize(req.body.name);
+        const email = sanitize(req.body.email);
+        const password = sanitize(req.body.password);
 
         //check if email is valid
         const email_regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -66,7 +70,8 @@ const loginUser = async (req, res, next) => {
     try {
         console.log('Request body:', req.body);
         //user pass in email and password
-        const { email, password } = req.body;
+        const email = sanitize(req.body.email);
+        const password = sanitize(req.body.password);
 
         const email_regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         if(!email_regex.test(email)) {
@@ -146,18 +151,18 @@ const updateProfile = async (req, res, next) => {
             throw new Error("User not found");
         }
 
-        user.name = req.body.name || user.name;
-        user.email = req.body.email || user.email;
+        user.name = sanitize(req.body.name) || user.name;
+        user.email = sanitize(req.body.email) || user.email;
 
         const email_regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         if(!email_regex.test(user.email)) {
             throw new Error("Email is not valid");
         }
-        if (req.body.password && req.body.password.length < 8) {
+        if (sanitize(req.body.password) && req.body.password.length < 8) {
             throw new Error("Password length must be at least 8")
         }
-        else if (req.body.password) {
-            user.password = req.body.password;
+        else if (sanitize(req.body.password)) {
+            user.password = sanitize(req.body.password);
         }
 
         // if all pass the condition , save the user
