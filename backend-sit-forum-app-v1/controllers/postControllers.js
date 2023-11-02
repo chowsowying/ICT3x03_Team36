@@ -1,4 +1,4 @@
-import { uploadPicture } from "../middleware/uploadPictureMiddleware.js";
+import { uploadPicture } from "../middleware/uploadPictureMiddleware";
 import User from "../models/User"
 import { fileRemover } from "../utils/fileRemover";
 import Post from "../models/Post";
