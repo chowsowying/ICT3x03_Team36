@@ -15,6 +15,10 @@ const registerUser = async (req, res, next) => {
             throw new Error("Email is not valid");
         }
 
+        if(password.length < 8) {
+            throw new Error("Password must be at least 8 characters");
+        }
+
 
         //check if user exist
         let user = await User.findOne({ email });
