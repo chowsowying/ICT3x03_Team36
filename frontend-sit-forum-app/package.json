@@ -2,7 +2,6 @@
   "name": "frontend-sit-forum-app",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "proxy": "http://localhost:8888",
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.7",
