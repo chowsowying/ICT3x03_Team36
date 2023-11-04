@@ -2,59 +2,68 @@ pipeline {
 	agent {
         docker {
             image 'node:18.18.2'
-            args '-d -p 8443:3000 -u root'
+            args '-d -p 8443:3000 -u root -v /home/student85/java:/opt/host-java -e JAVA_HOME=/opt/host-java/java-17-openjdk-amd64'
         }
     }
 
 	//tools {nodejs 'NodeJS'}
 
-	environment {
-        PORT = credentials('port')
-        DB_URI = credentials('DB_URI')
-        JWT_SECRET = credentials('JWT_SECRET')
-        NODE_ENV = credentials('NODE_ENV')
-        DANGEROUSLY_DISABLE_HOST_CHECK=credentials('DANGEROUSLY_DISABLE_HOST_CHECK')
-        REACT_APP_API = credentials('REACT_APP_API')
-    }
-
 	stages {
-		//stage('Backend Tests') {
-		    //steps{
-                //dir('backend-sit-forum-app-v1'){
-                    //sh 'npm install'
-                    //sh 'npm audit fix --force'
-                    //sh 'export PORT=$PORT'
-                    //sh 'export DB_URI=$DB_URI'
-                    //sh 'export JWT_SECRET=$JWT_SECRET'
-                    //sh 'export NODE_ENV=$NODE_ENV'
-                    //sh 'npm test'
-                    //junit 'backend-test-results.xml'
-                //}
-			//}
-		//}
+		stage('Backend Tests') {
+		    steps{
+                dir('backend-sit-forum-app-v1'){
+                    sh 'npm install'
+                    sh 'npm audit fix --force'
+                    sh 'npm test'
+                    junit 'backend-test-results.xml'
+                }
+			}
+		}
+        stage('Install Chrome for testing'){
+            steps{
+                sh 'echo $JAVA_HOME'
+                sh 'echo "export PATH=/opt/host-java/java-17-openjdk-amd64/bin:$PATH" >> ~/.bashrc'
+                sh '. ~/.bashrc'
+                sh '/opt/host-java/java-17-openjdk-amd64/bin/java -version'
+                sh 'wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -'
+                sh 'sh -c "echo \'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main\' >> /etc/apt/sources.list.d/google-chrome.list"'
+                sh 'apt-get update'
+                sh 'apt-get install -y google-chrome-stable'
 
-        stage('Testing'){
+                // Download and install ChromeDriver (adjust version as needed)
+                sh 'wget -N https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/119.0.6045.105/linux64/chromedriver-linux64.zip'
+                sh 'unzip chromedriver-linux64.zip'
+                sh 'cp ./chromedriver-linux64/chromedriver /usr/bin/chromedriver'
+                sh 'chmod +x /usr/bin/chromedriver'
+
+                sh 'apt-get install xvfb -y'
+                sh 'apt-get install dbus -y'
+                sh 'service dbus start'
+            }
+        }
+        stage('Frontend UI Testing'){
             parallel{
                 stage('Start Frontend'){
                     steps{
                         sh 'cd ./frontend-sit-forum-app && npm install'
-                        sh 'cd ./frontend-sit-forum-app && export DANGEROUSLY_DISABLE_HOST_CHECK=$DANGEROUSLY_DISABLE_HOST_CHECK'
-                        sh 'cd ./frontend-sit-forum-app && export REACT_APP_API=$REACT_APP_API'
-                        sh 'cd ./frontend-sit-forum-app && npm start'
+                        sh 'cd ./frontend-sit-forum-app && (npm start &)'
+                        input message: 'Finished using the web site? (Click "Proceed" to continue)'
                     }
                 }
-                stage('Frontend Tests') {
+                stage('Headless Browser Test') {
                     steps {
-                        sh 'sleep 120'
-                        sh 'cd ./frontend-sit-forum-app && npm test'
-                        junit './frontend-sit-forum-app/frontend-test-results.xml'
+                        dir('frontend-sit-forum-app'){
+                            sh 'sleep 120'
+                            sh 'npm test'
+                            junit 'frontend-test-results.xml'
+                        }
                     }
                 }
             }
         }
         stage('OWASP Dependency-Check Vulnerabilities') {
             steps {
-                dependencyCheck additionalArguments: '--format HTML --format XML', odcInstallation: 'OWASP Dependency-Check Vulnerabilities'
+                dependencyCheck additionalArguments: '--format HTML --format XML --log debug', odcInstallation: 'OWASP Dependency-Check Vulnerabilities'
             }
         }
 	}
