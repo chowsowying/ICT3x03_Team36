@@ -3,9 +3,7 @@ import User from "../models/User"
 import { fileRemover } from "../utils/fileRemover";
 import nodemailer from 'nodemailer'
 import jwt from 'jsonwebtoken'
-import Math from 'Math'
-import {hash, compare} from 'bcryptjs';
-import UserOTP from "../models/UserOTP";
+import logger  from "../config/logger";
 
 const sanitize = require('mongo-sanitize');
 
@@ -48,7 +46,7 @@ const registerUser = async (req, res, next) => {
         });
 
         //send back
-        //status 201 - request success
+        //status 201 - request success 
         return res.status(201).json({
             _id: user._id,
             avater: user.avater,
@@ -91,45 +89,18 @@ const loginUser = async (req, res, next) => {
         // Log the result of the query
         console.log('Query result:', user);
 
+
         //check if the user exits
         if (!user) {
             throw new Error("Invalid Email or Password");
         }
 
-
         //compare function return true / false
         if (await user.comparePassword(password)) {
-
-            // Generate OTP
-            const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
-            console.log(otp)
-
-            // nodemailer
-            let config = {
-                service : 'gmail',
-                auth : {
-                    user: process.env.EMAIL,
-                    pass: process.env.EMAIL_PASSWORD
-                }
+            //if user is admin
+            if(user.admin === true) {
+                logger.info(`Admin ${user.email} login success`);
             }
-            const transporter = nodemailer.createTransport(config);
-
-            const newOTPVerification = await new UserOTP({
-                userId: user._id,
-                otp: otp,
-                createdAt: Date.now(),
-                expiresAt: Date.now() + 900000,
-            });
-
-            await newOTPVerification.save()
-
-            const message = await transporter.sendMail({
-                from: process.env.EMAIL, // sender address
-                to: email, // receivers
-                subject: "Forum Reset Password Link", // Subject line
-                html: `Hi ${user.name}, here your OTP is ${otp}. OTP expires in 15 mins`, // html body
-            });
-
             //if true send user data
             return res.status(201).json({
                 _id: user._id,
@@ -139,8 +110,12 @@ const loginUser = async (req, res, next) => {
                 verified: user.verified,
                 admin: user.admin,
                 token: await user.generateJWT(),
+
             });
         } else {
+            if(user.admin === true) {
+                logger.error(`Admin ${user.email} login failed`);
+            }
             throw new Error("Invalid Email or Password");
         }
     } catch (error) {
@@ -148,59 +123,6 @@ const loginUser = async (req, res, next) => {
     }
 };
 
-const otpVerify = async (req, res, next) => {
-    try{
-        let {userotp, id} = req.body
-        console.log(userotp, id)
-        if (!id || !userotp){
-            throw new Error("Invalid OTP");
-        }
-
-        const UserOTPVerficationRecords = await UserOTP.find({
-            id
-        })
-        const _id = id
-        let user = await User.findById({ _id });
-
-        if (!user){
-            throw new Error("Account dont exist. Please sign up");
-        }
-
-        if (UserOTPVerficationRecords.length <= 0) {
-            throw new Error("Account dont exist. Please sign up");
-        }
-
-        const {expiresAt} = UserOTPVerficationRecords[0];
-        const otp = UserOTPVerficationRecords[0].otp
-
-        console.log(user)
-        if (expiresAt < Date.now()){
-            await UserOTP.deleteMany({id});
-            throw new Error("OTP expired. Please Sign in again.");
-        }
-        console.log(userotp, otp)
-        const validOTP = compare(userotp, otp)
-        console.log(validOTP)
-        if (userotp === otp){
-            const userId = id;
-            await UserOTP.deleteMany({userId});
-            return res.status(201).json({
-                _id: user._id,
-                avater: user.avater,
-                name: user.name,
-                email: user.email,
-                verified: user.verified,
-                admin: user.admin,
-                token: await user.generateJWT(),
-            });
-        }else{
-            throw new Error("Wrong OTP");
-        }
-
-    }catch(error){
-        next(error);
-    }
-};
 //user profile register
 const userProfile = async (req, res, next) => {
     try {
@@ -303,7 +225,7 @@ const updateProfilePicture = async (req, res, next) => {
                     });
                 } else {
 
-                    // if no file is being filled, reset it to empty
+                    // if no file is being filled, reset it to empty 
                     let filename;
                     let updatedUser = await User.findById(req.user._id);
 
@@ -348,6 +270,11 @@ const updateUser = async (req, res, next) => {
 
         // if all pass the condition , save the user
         const updatedUserProfile = await user.save();
+        if (updatedUserProfile.admin === true) {
+            logger.info(`Admin ${req.user.email} update user ${user.email} to admin`);
+        } else {
+            logger.info(`Admin ${req.user.email} update user ${user.email} to user`);
+        }
 
         res.json({
             _id: updatedUserProfile._id,
@@ -476,4 +403,4 @@ const resetPassword = async (req, res, next) => {
     }
 }
 
-export { registerUser, loginUser, userProfile, updateProfile, updateProfilePicture, getAllUser, updateUser, forgotPassword, resetPassword, otpVerify};
+export { registerUser, loginUser, userProfile, updateProfile, updateProfilePicture, getAllUser, updateUser, forgotPassword, resetPassword};

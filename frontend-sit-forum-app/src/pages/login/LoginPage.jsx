@@ -20,11 +20,8 @@ const LoginPage = () => {
             return login({ email, password});
         },
         onSuccess: (data) => {
-            console.log(data._id)
-            navigate(`/otp/${data._id}`);
-
-            //dispatch(userActions.setUserInfo(data));
-            //localStorage.setItem('account', JSON.stringify(data));
+            dispatch(userActions.setUserInfo(data));
+            localStorage.setItem('account', JSON.stringify(data));
         },
         onError: (error) => {
             toast.error(error.message)
