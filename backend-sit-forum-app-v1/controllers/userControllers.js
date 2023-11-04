@@ -1,6 +1,8 @@
 import { uploadPicture } from "../middleware/uploadPictureMiddleware";
 import User from "../models/User"
 import { fileRemover } from "../utils/fileRemover";
+import nodemailer from 'nodemailer'
+import jwt from 'jsonwebtoken'
 
 const sanitize = require('mongo-sanitize');
 
@@ -295,4 +297,97 @@ const getAllUser = async (req, res, next) => {
     }
 };
 
-export { registerUser, loginUser, userProfile, updateProfile, updateProfilePicture, getAllUser, updateUser };
+const forgotPassword = async (req, res, next) => {
+    try {
+        const email = sanitize(req.body.email);
+        const email_regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+        if(!email_regex.test(email)) {
+            throw new Error("Email is not valid");
+        }
+        //check if user exist
+        let user = await User.findOne({ email });
+
+        //check if the user exits
+        if (!user) {
+            throw new Error("Invalid Email");
+        }
+
+        // generate link with expiry
+        const secret = process.env.JWT_SECRET + user.password
+        const payload = {
+            email: user.email,
+            id: user._id
+        }
+
+        const token = jwt.sign(payload, secret, {expiresIn: '15m'})
+        console.log("token", user._id)
+        const link = `http://localhost:3000/reset-password/${user._id}/${token}`;
+
+        // nodemailer
+        let config = {
+            service : 'gmail',
+            auth : {
+                user: process.env.EMAIL,
+                pass: process.env.EMAIL_PASSWORD
+            }
+        }
+        const transporter = nodemailer.createTransport(config);
+
+        const message = await transporter.sendMail({
+            from: process.env.EMAIL, // sender address
+            to: email, // receivers
+            subject: "Forum Reset Password Link", // Subject line
+            html: `Hi ${user.name}, click <a href="${link}">here</a> to reset your password`, // html body
+        });
+        res.send("Password reset link has een sent to your email");
+
+
+    } catch (error) {
+        next(error);
+    }
+};
+
+// when user click the link
+const resetPassword = async (req, res, next) => {
+    try {
+        console.log("controller", req.params);
+        const {id, token} = req.params
+        const password = sanitize(req.body.password);
+
+        if (password.length < 8) {
+            throw new Error("Password must be at least 8 characters");
+        }
+
+        //check if user exist
+        let user = await User.findById({_id: id});
+        console.log("my user", user);
+        const secret = process.env.JWT_SECRET + user.password
+        jwt.verify(token, secret, (err, decoded) => {
+            if (err) {
+                throw new Error("Invalid token");
+            } else {
+                //change password
+                console.log("pw changed!")
+                user.password = password.password;
+            }
+        })
+        console.log(password)
+        const updatedUserProfile = await user.save();
+
+        res.json({
+            _id: updatedUserProfile._id,
+            avater: updatedUserProfile.avater,
+            name: updatedUserProfile.name,
+            email: updatedUserProfile.email,
+            verified: updatedUserProfile.verified,
+            admin: updatedUserProfile.admin,
+            token: await updatedUserProfile.generateJWT(),
+        })
+    }catch(error){
+        console.log(error);
+        next(error);
+    }
+}
+
+export { registerUser, loginUser, userProfile, updateProfile, updateProfilePicture, getAllUser, updateUser, forgotPassword, resetPassword};
