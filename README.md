@@ -22,12 +22,41 @@
    npm install
 
 3. **Create .env file for backend project solution**
-  <br>PORT = 5000
+  <br>PORT = 8888
   <br>DB_URI = {mongodb altas db url}
   <br>JWT_SECRET = 123456
   <br>NODE_ENV = development
-3. **Start Projects for both backend and frontend, must run both**
+  <br>EMAIL = ssdresetpw@gmail.com
+  <br>EMAIL_PASSWORD = ecshqlsxocashqjb
+
+4. **Create .env file for frontend project solution**
+  <br>DANGEROUSLY_DISABLE_HOST_CHECK=true
+  <br>REACT_APP_API='<YOUR_BACKEND_URL>'
+
+5. **Start Projects for both backend and frontend, must run both**
    ```bash
    npm start
 
+6. **Building the docker image**
+   ```bash
+   sudo docker build -t <IMAGE_NAME> . 
 
+7. **Running the image**
+   Note that this project requires SSL running on both the frontend and backend to work when hosted over the Internet. [mesudip's nginx reverse proxy](https://github.com/mesudip/nginx-proxy) is the simplest way to set this up. After creating your SSL certs and key using certbot, move them to /etc/ssl and run
+   ```bash
+   docker pull mesudip/nginx-proxy
+   docker network create frontend;    # create a network for nginx proxy 
+   docker run  --network frontend \
+            --name nginx-proxy \
+            -v /var/run/docker.sock:/var/run/docker.sock:ro \
+            -v /etc/ssl:/etc/ssl \
+            -v /etc/nginx/dhparam:/etc/nginx/dhparam \
+            -p 80:80 \
+            -p 443:443 \
+            -d --restart always mesudip/nginx-proxy
+   ```
+   to start the reverse proxy. Next, run 
+   ```bash
+   sudo docker run -d --name <CONTAINER_NAME> --restart=on-failure   -u root  -p 3000:3000 -p 8888:8888 -e "VIRTUAL_HOST1=https://<YOUR_BACKEND_URL> -> :8888" -e "VIRTUAL_HOST2=https://<YOUR_FRONTEND_URL> -> :3000" --network frontend <IMAGE_NAME>
+   ```
+   to start the container. Wait 30 seconds to 1 minute for the web application to start.
