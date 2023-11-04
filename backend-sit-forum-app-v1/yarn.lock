@@ -779,6 +779,11 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
+math@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.npmjs.org/math/-/math-0.0.3.tgz"
+  integrity sha512-xyNJxsEwpYBabFmCgwg7TFRljf5oGgV2h1TqP0H9RnykScaSKgoVlBaEz+Gov8NOdxFagoTzRg1aEBfayi8qQQ==
+
 md5@^2.3.0:
   version "2.3.0"
   resolved "https://registry.npmjs.org/md5/-/md5-2.3.0.tgz"
