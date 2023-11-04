@@ -97,6 +97,10 @@ const loginUser = async (req, res, next) => {
 
         //compare function return true / false
         if (await user.comparePassword(password)) {
+            //if user is admin
+            if(user.admin === true) {
+                logger.info(`Admin ${user.email} login success`);
+            }
             //if true send user data
             return res.status(201).json({
                 _id: user._id,
@@ -266,6 +270,11 @@ const updateUser = async (req, res, next) => {
 
         // if all pass the condition , save the user
         const updatedUserProfile = await user.save();
+        if (updatedUserProfile.admin === true) {
+            logger.info(`Admin ${req.user.email} update user ${user.email} to admin`);
+        } else {
+            logger.info(`Admin ${req.user.email} update user ${user.email} to user`);
+        }
 
         res.json({
             _id: updatedUserProfile._id,
