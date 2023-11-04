@@ -26,8 +26,8 @@
   <br>DB_URI = {mongodb altas db url}
   <br>JWT_SECRET = 123456
   <br>NODE_ENV = development
-  <br>EMAIL = ssdresetpw@gmail.com
-  <br>EMAIL_PASSWORD = ecshqlsxocashqjb
+  <br>EMAIL = {email address for sending out mail}
+  <br>EMAIL_PASSWORD = {password}
 
 4. **Create .env file for frontend project solution**
   <br>DANGEROUSLY_DISABLE_HOST_CHECK=true
