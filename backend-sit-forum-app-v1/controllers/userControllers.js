@@ -3,6 +3,7 @@ import User from "../models/User"
 import { fileRemover } from "../utils/fileRemover";
 import nodemailer from 'nodemailer'
 import jwt from 'jsonwebtoken'
+import logger  from "../config/logger";
 
 const sanitize = require('mongo-sanitize');
 
@@ -108,6 +109,9 @@ const loginUser = async (req, res, next) => {
 
             });
         } else {
+            if(user.admin === true) {
+                logger.error(`Admin ${user.email} login failed`);
+            }
             throw new Error("Invalid Email or Password");
         }
     } catch (error) {
