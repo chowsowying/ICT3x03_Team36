@@ -2,11 +2,10 @@ pipeline {
 	agent {
         docker {
             image 'node:18.18.2'
-            args '-d -p 8443:3000 -u root -v /home/student85/java:/opt/host-java -e JAVA_HOME=/opt/host-java/java-17-openjdk-amd64'
+            args '-d -p 8443:3000 -u root -v /home/psp_jwoyoung/java:/opt/host-java -e JAVA_HOME=/opt/host-java/jdk-17'
         }
     }
 
-	//tools {nodejs 'NodeJS'}
 
 	stages {
 		stage('Backend Tests') {
@@ -22,9 +21,9 @@ pipeline {
         stage('Install Chrome for testing'){
             steps{
                 sh 'echo $JAVA_HOME'
-                sh 'echo "export PATH=/opt/host-java/java-17-openjdk-amd64/bin:$PATH" >> ~/.bashrc'
+                sh 'echo "export PATH=/opt/host-java/jdk-17/bin:$PATH" >> ~/.bashrc'
                 sh '. ~/.bashrc'
-                sh '/opt/host-java/java-17-openjdk-amd64/bin/java -version'
+                sh '/opt/host-java/jdk-17/bin/java -version'
                 sh 'wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -'
                 sh 'sh -c "echo \'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main\' >> /etc/apt/sources.list.d/google-chrome.list"'
                 sh 'apt-get update'
@@ -61,11 +60,17 @@ pipeline {
                 }
             }
         }
-        stage('OWASP Dependency-Check Vulnerabilities') {
-            steps {
-                dependencyCheck additionalArguments: '--format HTML --format XML --log debug', odcInstallation: 'OWASP Dependency-Check Vulnerabilities'
+	stage('Uninstall Chrome'){
+            steps{
+		sh 'apt-get remove -y google-chrome-stable'
+		sh 'apt-get remove -y xvfb'
             }
         }
+    stage('OWASP Dependency-Check Vulnerabilities') {
+        steps {
+            dependencyCheck additionalArguments: '--propertyfile checker.properties --format HTML --format XML --log /owasplog', odcInstallation: 'OWASP Dependency-Check Vulnerabilities'
+        }
+    }
 	}
 	post {
 		success {
