@@ -3,7 +3,7 @@ import User from "../models/User"
 import { fileRemover } from "../utils/fileRemover";
 import nodemailer from 'nodemailer'
 import jwt from 'jsonwebtoken'
-import Math from 'Math';
+//import Math from 'Math';
 import {hash, compare} from 'bcryptjs';
 import UserOTP from "../models/UserOTP";
 import logger  from "../config/logger";
